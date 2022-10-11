@@ -1,4 +1,5 @@
 from random import choice
+from tqdm import tqdm
 
 
 class Ant:
@@ -21,15 +22,20 @@ class Ant:
             self.steps += 1
 
     # checks whether ant has reached the boundary
-    def boundary(self):
+    def boundary(self, type):
         x = self.x
         y = self.y
-        out = (abs(x) == 2) or (abs(y) == 2)
+        if type == 'square':
+            out = (abs(x) == 2) or (abs(y) == 2)
+        elif type == 'diagonal':
+            out = True
+        elif type == 'outer_disk':
+            out = True
         if out:
             self.status = 'stopped'
 
 
-def generate(nb_ants, steps_limit):
+def generate(nb_ants, steps_limit, boundary_type='square'):
     '''
     Generate a Random Walk of "nb_ants" and limits the number of steps for each to "steps_limit".
     '''
@@ -37,6 +43,8 @@ def generate(nb_ants, steps_limit):
     expected_value = 0
     # keep track of all running ants
     ants = [Ant() for _ in range(nb_ants)]
+    # progress bar
+    pbar = tqdm(total=nb_ants, desc='Stopped Ants')
     while ants:
         for ant in ants:
             # ant takes a step
@@ -45,15 +53,18 @@ def generate(nb_ants, steps_limit):
             if ant.steps >= steps_limit:
                 ant.status == 'stopped'
             # check for the boundary
-            ant.boundary()
+            ant.boundary(type=boundary_type)
             # stop the ant
             if ant.status == 'stopped':
                 ants.remove(ant)
+                pbar.update(1)
                 expected_value += ant.steps
+    pbar.close()
     # return the expected value
     expected_value = expected_value/nb_ants
-    print(expected_value)
+    expected_value = round(expected_value, 2)
+    print('\n Expected number of steps: %s \n' % expected_value)
 
 
 if __name__ == '__main__':
-    generate(1000, 100)
+    generate(100000, 100)
