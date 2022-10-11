@@ -30,7 +30,7 @@ class Ant:
         elif type == 'diagonal':
             out = (x+y == 1)
         elif type == 'outer_disk':
-            out = True
+            out = (((x-0.25)/3)**2 + ((y-0.25)/4)**2 >= 1)
         if out:
             self.status = 'stopped'
 
