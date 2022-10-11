@@ -28,7 +28,7 @@ class Ant:
         if type == 'square':
             out = (abs(x) == 2) or (abs(y) == 2)
         elif type == 'diagonal':
-            out = True
+            out = (x+y == 1)
         elif type == 'outer_disk':
             out = True
         if out:
@@ -67,4 +67,4 @@ def generate(nb_ants, steps_limit, boundary_type='square'):
 
 
 if __name__ == '__main__':
-    generate(100000, 100)
+    generate(nb_ants=100000, steps_limit=100, boundary_type='diagonal')
